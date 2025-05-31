@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 import json
-from typing import Dict, List
+from typing import Dict, List, Optional
 import uuid
 from config import settings
 
@@ -22,7 +22,11 @@ class ConnectionManager:
         self.document_users: Dict[str, Dict[str, str]] = {}
 
     async def connect(
-        self, websocket: WebSocket, document_id: str, user_id: str, user_name: str
+        self,
+        websocket: WebSocket,
+        document_id: str,
+        user_id: str,
+        user_name: str,
     ):
         await websocket.accept()
         if document_id not in self.active_connections:
@@ -55,7 +59,10 @@ class ConnectionManager:
                     del self.document_users[document_id]
 
     async def broadcast_to_document(
-        self, document_id: str, message: dict, exclude_websocket: WebSocket = None
+        self,
+        document_id: str,
+        message: dict,
+        exclude_websocket: Optional[WebSocket] = None,
     ):
         if document_id in self.active_connections:
             disconnected = []
@@ -63,7 +70,7 @@ class ConnectionManager:
                 if connection != exclude_websocket:
                     try:
                         await connection.send_text(json.dumps(message))
-                    except:
+                    except Exception:
                         disconnected.append(connection)
 
             for conn in disconnected:
@@ -121,20 +128,30 @@ async def websocket_endpoint(websocket: WebSocket, document_id: str):
 
 
 async def handle_ai_request(
-    websocket: WebSocket, document_id: str, user_id: str, message: dict
+    websocket: WebSocket,
+    document_id: str,
+    user_id: str,
+    message: dict,
 ):
-    """處理 AI 請求"""
+    """Handle AI requests"""
     try:
         prompt = message.get("prompt", "")
-        context = message.get("context", "")
 
         if settings.has_openai_key:
-            # TODO: 實際的 OpenAI API 調用
-            # 這裡可以添加真實的 OpenAI API 整合
-            ai_response_content = f"AI 建議：根據您的提示「{prompt}」，我建議在劇本中加入更多角色互動和情節轉折。"
+            # TODO: Actual OpenAI API call
+            # Real OpenAI API integration can be added here
+            ai_response_content = (
+                f"AI Suggestion: Based on your prompt '{prompt}', "
+                "I recommend adding more character interactions and "
+                "plot twists to your script."
+            )
         else:
-            # 模擬 AI 回應
-            ai_response_content = f"AI 建議：根據您的提示「{prompt}」，我建議在劇本中加入更多角色互動和情節轉折。"
+            # Simulate AI response
+            ai_response_content = (
+                f"AI Suggestion: Based on your prompt '{prompt}', "
+                "I recommend adding more character interactions and "
+                "plot twists to your script."
+            )
 
         ai_response = {
             "type": "ai_response",
@@ -144,10 +161,10 @@ async def handle_ai_request(
             "user_id": user_id,
         }
 
-        # 發送給請求的用戶
+        # Send to requesting user
         await websocket.send_text(json.dumps(ai_response))
 
-        # 也廣播給其他用戶（讓他們看到 AI 建議）
+        # Also broadcast to other users (let them see AI suggestions)
         await manager.broadcast_to_document(
             document_id,
             {**ai_response, "type": "ai_suggestion_broadcast"},
@@ -168,5 +185,8 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(
-        "main:app", host=settings.HOST, port=settings.PORT, reload=settings.DEBUG
+        "main:app",
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=settings.DEBUG,
     )

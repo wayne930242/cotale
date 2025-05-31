@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "CoTale Backend",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/cotale-backend/run.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/cotale-backend",
+      "python": "${workspaceFolder}/cotale-backend/.venv/bin/python",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/cotale-backend"
+      },
+      "justMyCode": true
+    },
+    {
+      "name": "CoTale Backend (main.py)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/cotale-backend/main.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/cotale-backend",
+      "python": "${workspaceFolder}/cotale-backend/.venv/bin/python",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/cotale-backend"
+      },
+      "justMyCode": true
+    }
+  ]
+} 

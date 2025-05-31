@@ -1,58 +1,58 @@
-# CoTale - TRPG AI 劇本編輯器
+# CoTale - TRPG AI Script Editor
 
-一個協作式 TRPG 劇本編輯器，結合 AI 助手讓創作更輕鬆。
+A collaborative TRPG script editor with AI assistant to make creation easier.
 
-## 功能特色
+## Features
 
-- 🤝 **即時協作**：多人同時編輯，即時同步變更
-- 🤖 **AI 助手**：智慧建議劇情發展和角色對話
-- ✍️ **專業編輯**：專為 TRPG 劇本設計的編輯環境
-- 🎨 **美觀介面**：現代化的使用者介面設計
+- 🤝 **Real-time Collaboration**: Multiple users editing simultaneously with real-time sync
+- 🤖 **AI Assistant**: Smart suggestions for plot development and character dialogue
+- ✍️ **Professional Editor**: Editing environment designed specifically for TRPG scripts
+- 🎨 **Beautiful Interface**: Modern user interface design
 
-## 技術棧
+## Tech Stack
 
-### 前端
-- **Next.js 15** - React 框架
-- **TypeScript** - 型別安全
-- **Tailwind CSS** - 樣式框架
-- **Monaco Editor** - 程式碼編輯器
-- **Yjs** - 協作編輯 CRDT
-- **Lucide React** - 圖標庫
+### Frontend
+- **Next.js 15** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling framework
+- **Monaco Editor** - Code editor
+- **Yjs** - Collaborative editing CRDT
+- **Lucide React** - Icon library
 
-### 後端
-- **FastAPI** - Python Web 框架
-- **WebSocket** - 即時通訊
+### Backend
+- **FastAPI** - Python web framework
+- **WebSocket** - Real-time communication
 - **SQLAlchemy** - ORM
-- **OpenAI API** - AI 功能
-- **Uvicorn** - ASGI 伺服器
+- **OpenAI API** - AI functionality
+- **Uvicorn** - ASGI server
 
-## 快速開始
+## Quick Start
 
-### 1. 安裝依賴
+### 1. Install Dependencies
 
-#### 前端
+#### Frontend
 ```bash
 cd cotale-frontend
 pnpm install
 ```
 
-#### 後端
+#### Backend
 ```bash
 cd cotale-backend
 uv sync
 ```
 
-### 2. 環境設定
+### 2. Environment Setup
 
-#### 前端環境變數
-在 `cotale-frontend/` 目錄下建立 `.env.local`：
+#### Frontend Environment Variables
+Create `.env.local` in `cotale-frontend/` directory:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 NEXT_PUBLIC_WS_URL=ws://localhost:8000
 ```
 
-#### 後端環境變數
-在 `cotale-backend/` 目錄下建立 `.env`：
+#### Backend Environment Variables
+Create `.env` in `cotale-backend/` directory:
 ```env
 # Database
 DATABASE_URL=sqlite:///./cotale.db
@@ -67,74 +67,112 @@ JWT_SECRET_KEY=your-super-secret-jwt-key-here
 ALLOWED_ORIGINS=http://localhost:3000
 ```
 
-### 3. 啟動服務
+### 3. Start Services
 
-#### 啟動後端 API
+#### Option A: Using Development Scripts (Recommended)
+
+We provide convenient scripts to manage the development environment using tmux:
+
+```bash
+# Start both frontend and backend in tmux sessions
+./start-dev.sh
+
+# View logs from both services
+./logs.sh
+
+# Stop all development services
+./stop-dev.sh
+```
+
+**Development Scripts Features:**
+- **`start-dev.sh`**: Starts both frontend and backend in separate tmux windows
+- **`logs.sh`**: Interactive log viewer with options to view backend logs, frontend logs, or enter full tmux interface
+- **`stop-dev.sh`**: Stops all development services
+
+**tmux Navigation:**
+- `Ctrl+B` then `0` - Backend window
+- `Ctrl+B` then `1` - Frontend window  
+- `Ctrl+B` then `2` - Terminal window
+- `Ctrl+B` then `d` - Detach from tmux (services keep running)
+
+#### Option B: Manual Start
+
+##### Start Backend API
 ```bash
 cd cotale-backend
 source .venv/bin/activate
 python main.py
 ```
-後端將在 http://localhost:8000 啟動
+Backend will start at http://localhost:8000
 
-#### 啟動前端
+##### Start Frontend
 ```bash
 cd cotale-frontend
 pnpm dev
 ```
-前端將在 http://localhost:3000 啟動
+Frontend will start at http://localhost:3000
 
-### 4. 開始使用
+### 4. Start Using
 
-1. 打開瀏覽器訪問 http://localhost:3000
-2. 點擊「建立新劇本」或輸入劇本 ID 加入現有劇本
-3. 開始協作編輯和使用 AI 助手！
+1. Open browser and visit http://localhost:3000
+2. Click "Create New Script" or enter a script ID to join existing script
+3. Start collaborative editing and using the AI assistant!
 
-## 專案結構
+## Development URLs
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+- **API Redoc**: http://localhost:8000/redoc
+
+## Project Structure
 
 ```
 CoTale/
-├── cotale-frontend/             # 前端 Next.js 專案
+├── cotale-frontend/             # Frontend Next.js project
 │   ├── app/
-│   │   ├── page.tsx            # 主頁面
+│   │   ├── page.tsx            # Main page
 │   │   └── editor/[documentId]/
-│   │       └── page.tsx        # 編輯器頁面
+│   │       └── page.tsx        # Editor page
 │   ├── components/
-│   │   └── MonacoEditor.tsx    # Monaco 編輯器組件
+│   │   └── MonacoEditor.tsx    # Monaco editor component
 │   └── package.json
-├── cotale-backend/              # 後端 FastAPI 專案
-│   ├── main.py                 # 主要 API 入口
+├── cotale-backend/              # Backend FastAPI project
+│   ├── main.py                 # Main API entry point
 │   └── pyproject.toml
+├── start-dev.sh                # Start development environment
+├── stop-dev.sh                 # Stop development environment
+├── logs.sh                     # View development logs
 └── README.md
 ```
 
-## 開發階段
+## Development Phases
 
 ### Phase 1: MVP ✅
-- [x] 基礎 Monaco + Yjs 編輯器
-- [x] 簡單的 AI 對話介面
-- [x] 基本的內容插入功能
-- [x] WebSocket 連接架構
+- [x] Basic Monaco + Yjs editor
+- [x] Simple AI chat interface
+- [x] Basic content insertion functionality
+- [x] WebSocket connection architecture
 
-### Phase 2: 協作功能 (進行中)
-- [ ] 多用戶即時編輯
-- [ ] 游標同步和 awareness
-- [ ] 完整的 WebSocket 架構
+### Phase 2: Collaboration Features (In Progress)
+- [ ] Multi-user real-time editing
+- [ ] Cursor sync and awareness
+- [ ] Complete WebSocket architecture
 
-### Phase 3: AI 增強
-- [ ] 智慧位置分析
-- [ ] 上下文理解
-- [ ] 多種 AI 助手模式
+### Phase 3: AI Enhancement
+- [ ] Smart position analysis
+- [ ] Context understanding
+- [ ] Multiple AI assistant modes
 
-### Phase 4: 付費系統
-- [ ] Patreon OAuth 整合
-- [ ] Credit 系統
-- [ ] 用量統計和限制
+### Phase 4: Payment System
+- [ ] Patreon OAuth integration
+- [ ] Credit system
+- [ ] Usage statistics and limits
 
-## 貢獻
+## Contributing
 
-歡迎提交 Issue 和 Pull Request！
+Issues and Pull Requests are welcome!
 
-## 授權
+## License
 
 MIT License 

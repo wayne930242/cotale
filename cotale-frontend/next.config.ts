@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   webpack: (config, { isServer }) => {
-    // Monaco Editor 支援
+    // Monaco Editor support
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       };
     }
 
-    // 處理 Monaco Editor 的 worker 檔案
+    // Handle Monaco Editor worker files
     config.module.rules.push({
       test: /\.worker\.js$/,
       use: { loader: 'worker-loader' },

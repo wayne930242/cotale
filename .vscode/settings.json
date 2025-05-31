@@ -5,10 +5,21 @@
     "./cotale-backend"
   ],
   "python.analysis.autoSearchPaths": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.indexing": true,
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
   "python.formatting.provider": "black",
+  
+  // Pylance specific settings
+  "pylance.insidersChannel": "off",
+  "python.languageServer": "Pylance",
+  
+  // Workspace specific Python settings
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.terminal.activateEnvInCurrentTerminal": true,
   
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",

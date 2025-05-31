@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-CoTale Backend 啟動腳本
-使用方式: uv run python run.py
+CoTale Backend startup script
+Usage: uv run python run.py
 """
 
 if __name__ == "__main__":
     import uvicorn
     from config import settings
 
-    print(f"🚀 啟動 CoTale Backend...")
+    print("🚀 Starting CoTale Backend...")
     print(f"📍 Host: {settings.HOST}")
     print(f"🔌 Port: {settings.PORT}")
     print(f"🐛 Debug: {settings.DEBUG}")
