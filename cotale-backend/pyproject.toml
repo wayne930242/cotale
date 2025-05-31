@@ -1,0 +1,19 @@
+[project]
+name = "cotale-backend"
+version = "0.1.0"
+description = "CoTale TRPG 協作劇本編輯器後端"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "alembic>=1.16.1",
+    "fastapi>=0.115.12",
+    "httpx>=0.28.1",
+    "openai>=1.82.1",
+    "pydantic>=2.11.5",
+    "python-dotenv>=1.1.0",
+    "python-jose>=3.5.0",
+    "python-multipart>=0.0.20",
+    "sqlalchemy>=2.0.41",
+    "uvicorn>=0.34.2",
+    "websockets>=15.0.1",
+]
