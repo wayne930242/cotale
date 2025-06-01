@@ -9,7 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChatBubble, ChatBubbleAvatar, ChatBubbleMessage } from "@/components/ui/chat-bubble";
+import {
+  ChatBubble,
+  ChatBubbleAvatar,
+  ChatBubbleMessage,
+} from "@/components/ui/chat-bubble";
 import { ChatInput } from "@/components/ui/chat-input";
 import { ChatMessageList } from "@/components/ui/chat-message-list";
 
@@ -97,15 +101,15 @@ export default function EditorPage() {
   };
 
   return (
-    <div className="h-screen bg-slate-900 flex flex-col">
+    <div className="h-dvh bg-background flex flex-col">
       {/* Header */}
-      <header className="bg-slate-800 border-b border-slate-700 px-6 py-4">
+      <header className="bg-card border-b border-border px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-semibold text-white">
+            <h1 className="text-xl font-semibold text-foreground">
               {config.appName.split("").map((char, index) =>
                 index === 2 ? (
-                  <span key={index} className="text-purple-400">
+                  <span key={index} className="text-primary">
                     {char}
                   </span>
                 ) : (
@@ -113,7 +117,10 @@ export default function EditorPage() {
                 )
               )}
             </h1>
-            <Badge variant="secondary" className="bg-slate-700 text-slate-300">
+            <Badge
+              variant="secondary"
+              className="bg-secondary text-secondary-foreground"
+            >
               Script ID: {documentId}
             </Badge>
           </div>
@@ -122,14 +129,14 @@ export default function EditorPage() {
             {/* Collaborative users */}
             {config.enableCollaboration && (
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-slate-400" />
+                <Users className="w-5 h-5 text-muted-foreground" />
                 <div className="flex -space-x-2">
                   {users.map((user) => (
                     <Avatar
                       key={user.id}
-                      className="w-8 h-8 border-2 border-slate-800"
+                      className="w-8 h-8 border-2 border-border"
                     >
-                      <AvatarFallback className="bg-purple-500 text-white text-sm">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-sm">
                         {user.name[0]}
                       </AvatarFallback>
                     </Avatar>
@@ -142,19 +149,19 @@ export default function EditorPage() {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex min-h-0">
         {/* AI Chat Panel */}
         {config.enableAiFeatures && (
-          <Card className="w-80 bg-slate-800 border-slate-700 rounded-none border-r border-t-0 border-b-0 border-l-0 flex flex-col">
-            <CardHeader className="border-b border-slate-700">
-              <CardTitle className="text-lg text-white flex items-center gap-2">
+          <Card className="w-80 bg-card border-border rounded-none border-r border-t-0 border-b-0 border-l-0 flex flex-col min-h-0">
+            <CardHeader className="border-b border-border flex-shrink-0">
+              <CardTitle className="text-lg text-card-foreground flex items-center gap-2">
                 <MessageSquare className="w-5 h-5" />
                 AI Assistant
               </CardTitle>
             </CardHeader>
 
             {/* Chat Messages using shadcn-chat components */}
-            <CardContent className="flex-1 p-0">
+            <CardContent className="flex-1 p-0 min-h-0 overflow-hidden">
               <ChatMessageList className="h-full">
                 {chatMessages.map((message) => (
                   <ChatBubble
@@ -186,21 +193,21 @@ export default function EditorPage() {
             </CardContent>
 
             {/* Chat Input */}
-            <div className="p-4 border-t border-slate-700">
+            <div className="p-4 border-t border-border flex-shrink-0">
               <div className="flex gap-2">
                 <ChatInput
                   value={currentMessage}
                   onChange={(e) => setCurrentMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Ask AI assistant..."
-                  className="flex-1 bg-slate-700 border-slate-600 text-white placeholder-slate-400 focus:border-purple-400"
+                  className="flex-1"
                   disabled={isAiThinking}
                 />
                 <Button
                   onClick={sendMessage}
                   disabled={!currentMessage.trim() || isAiThinking}
                   size="icon"
-                  className="bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600"
+                  className="bg-primary hover:bg-primary/90 disabled:bg-muted w-12 h-12"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
@@ -210,12 +217,14 @@ export default function EditorPage() {
         )}
 
         {/* Editor Panel */}
-        <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b border-slate-700 bg-slate-800">
-            <h2 className="text-lg font-semibold text-white">Script Editor</h2>
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="p-4 border-b border-border bg-card flex-shrink-0">
+            <h2 className="text-lg font-semibold text-card-foreground">
+              Script Editor
+            </h2>
           </div>
 
-          <div className="flex-1">
+          <div className="flex-1 min-h-0">
             <MonacoEditor documentId={documentId} />
           </div>
         </div>

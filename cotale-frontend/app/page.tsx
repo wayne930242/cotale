@@ -2,11 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FileText, Users, Zap, ArrowRight } from "lucide-react";
+import {
+  FileText,
+  Users,
+  Zap,
+  ArrowRight,
+  LogIn,
+  UserPlus,
+} from "lucide-react";
 import { config } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FeatureCard } from "@/components/ui/feature-card";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
@@ -39,7 +47,8 @@ export default function Home() {
     {
       icon: Zap,
       title: "AI Assistant",
-      description: "Smart suggestions for plot development and character dialogue",
+      description:
+        "Smart suggestions for plot development and character dialogue",
       enabled: config.enableAiFeatures,
     },
     {
@@ -53,7 +62,28 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container mx-auto px-4 py-16">
-        {/* Header */}
+        {/* Header with Auth Buttons */}
+        <div className="flex justify-end mb-8">
+          <div className="flex gap-4">
+            <Link href="/auth/login">
+              <Button
+                variant="outline"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/30 hover:text-white hover:border-white/40 cursor-pointer transition-all duration-200"
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                Login
+              </Button>
+            </Link>
+            <Link href="/auth/register">
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer transition-all duration-200">
+                <UserPlus className="w-4 h-4 mr-2" />
+                Register
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Main Content */}
         <div className="text-center mb-16">
           <h1 className="text-6xl font-bold text-white mb-6">
             {config.appName.split("").map((char, index) =>
@@ -90,7 +120,7 @@ export default function Home() {
         <div className="max-w-md mx-auto space-y-4">
           <Button
             onClick={createNewDocument}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-6 text-lg"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-6 text-lg cursor-pointer transition-all duration-200"
             size="lg"
           >
             <FileText className="w-5 h-5 mr-2" />
@@ -113,7 +143,7 @@ export default function Home() {
               onClick={joinDocument}
               disabled={!documentId.trim()}
               variant="secondary"
-              className="bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:opacity-50 text-white"
+              className="bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:opacity-50 text-white cursor-pointer disabled:cursor-not-allowed transition-all duration-200"
             >
               Join
             </Button>

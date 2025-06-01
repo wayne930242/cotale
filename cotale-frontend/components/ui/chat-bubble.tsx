@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 // ChatBubble
 const chatBubbleVariant = cva(
-  "flex gap-2 max-w-[60%] items-end relative group",
+  "flex gap-2 max-w-[90%] items-end relative group",
   {
     variants: {
       variant: {
@@ -67,7 +67,9 @@ const ChatBubbleAvatar: React.FC<ChatBubbleAvatarProps> = ({
 }) => (
   <Avatar className={className}>
     <AvatarImage src={src} alt="Avatar" />
-    <AvatarFallback>{fallback}</AvatarFallback>
+    <AvatarFallback className="bg-muted text-muted-foreground">
+      {fallback}
+    </AvatarFallback>
   </Avatar>
 );
 
@@ -76,12 +78,12 @@ const chatBubbleMessageVariants = cva("p-4", {
   variants: {
     variant: {
       received:
-        "bg-secondary text-secondary-foreground rounded-r-lg rounded-tl-lg",
+        "bg-secondary text-secondary-foreground rounded-r-lg rounded-tl-lg border border-border",
       sent: "bg-primary text-primary-foreground rounded-l-lg rounded-tr-lg",
     },
     layout: {
       default: "",
-      ai: "border-t w-full rounded-none bg-transparent",
+      ai: "border-t w-full rounded-none bg-transparent border-border",
     },
   },
   defaultVariants: {
@@ -135,7 +137,7 @@ const ChatBubbleTimestamp: React.FC<ChatBubbleTimestampProps> = ({
   className,
   ...props
 }) => (
-  <div className={cn("text-xs mt-2 text-right", className)} {...props}>
+  <div className={cn("text-xs mt-2 text-right text-muted-foreground", className)} {...props}>
     {timestamp}
   </div>
 );
@@ -156,7 +158,10 @@ const ChatBubbleAction: React.FC<ChatBubbleActionProps> = ({
   <Button
     variant={variant}
     size={size}
-    className={className}
+    className={cn(
+      "hover:bg-accent text-muted-foreground hover:text-accent-foreground",
+      className
+    )}
     onClick={onClick}
     {...props}
   >
