@@ -1,4 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+import NextAuth from "next-auth";
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { authService } from "@/lib/services/auth.service";
 
 export interface User {
   id: number;
@@ -25,90 +28,65 @@ export interface AuthResponse {
   token_type: string;
 }
 
-class AuthAPI {
-  private getAuthHeaders(): Record<string, string> {
-    const token = this.getToken();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  }
-
-  async register(data: RegisterData): Promise<User> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+export const authOptions: NextAuthOptions = {
+  providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
-      body: JSON.stringify(data),
-    });
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || 'Registration failed');
-    }
+        try {
+          const authData = await authService.login({
+            email: credentials.email,
+            password: credentials.password,
+          });
 
-    return response.json();
-  }
+          const user = await authService.getCurrentUser(authData.access_token);
 
-  async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+          return {
+            id: user.id.toString(),
+            email: user.email,
+            name: user.username,
+            accessToken: authData.access_token,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
       },
-      body: JSON.stringify(credentials),
-    });
+    }),
+    // TODO: Add Patreon OAuth provider
+    // PatreonProvider({
+    //   clientId: process.env.PATREON_CLIENT_ID!,
+    //   clientSecret: process.env.PATREON_CLIENT_SECRET!,
+    // })
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.accessToken = user.accessToken;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token.accessToken) {
+        session.accessToken = token.accessToken;
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/auth/login",
+  },
+  session: {
+    strategy: "jwt",
+  },
+};
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || 'Login failed');
-    }
-
-    const authData = await response.json();
-    this.setToken(authData.access_token);
-    return authData;
-  }
-
-  async getCurrentUser(): Promise<User> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...this.getAuthHeaders(),
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to get user info');
-    }
-
-    return response.json();
-  }
-
-  async logout(): Promise<void> {
-    await fetch(`${API_BASE_URL}/api/auth/logout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...this.getAuthHeaders(),
-      },
-    });
-    this.removeToken();
-  }
-
-  setToken(token: string): void {
-    localStorage.setItem('auth_token', token);
-  }
-
-  getToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('auth_token');
-  }
-
-  removeToken(): void {
-    localStorage.removeItem('auth_token');
-  }
-
-  isAuthenticated(): boolean {
-    return !!this.getToken();
-  }
-}
-
-export const authAPI = new AuthAPI(); 
+export default NextAuth(authOptions);

@@ -6,7 +6,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.api.v1 import auth, websocket, documents
+from app.api.v1 import auth
+
+# from app.api.v1 import documents  # websocket temporarily disabled
+# from app.api.v1 import websocket
 
 # Create FastAPI application
 app = FastAPI(
@@ -26,9 +29,9 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
-app.include_router(documents.router, prefix="/api/documents", tags=["documents"])
-app.include_router(websocket.router, prefix="/api", tags=["websocket"])
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
+# app.include_router(documents.router, prefix="/api/v1/documents", tags=["documents"])
+# app.include_router(websocket.router, prefix="/api/v1", tags=["websocket"])  # Temporarily disabled due to Pydantic error
 
 
 @app.get("/")

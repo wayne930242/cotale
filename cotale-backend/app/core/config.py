@@ -5,9 +5,12 @@ Configuration module for CoTale backend
 import os
 from typing import List
 from dotenv import load_dotenv
+from pathlib import Path
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from root .env file
+root_dir = Path(__file__).parent.parent.parent.parent  # Go up to project root
+env_path = root_dir / ".env"
+load_dotenv(env_path)
 
 
 class Settings:

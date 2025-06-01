@@ -11,7 +11,7 @@ from app.schemas.user import UserCreate, UserLogin, User as UserSchema, Token
 from app.core.security import get_current_active_user
 from app.models.user import User
 
-router = APIRouter(prefix="/api/auth", tags=["authentication"])
+router = APIRouter()
 security = HTTPBearer()
 
 
