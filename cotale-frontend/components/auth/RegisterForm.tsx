@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Mail, Lock, User } from "lucide-react";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +19,7 @@ import {
 import { authService } from "@/lib/services/auth.service";
 import { registerSchema, type RegisterFormData } from "@/lib/schemas/auth";
 
-export default function RegisterForm() {
+function RegisterFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
@@ -58,9 +58,10 @@ export default function RegisterForm() {
       } else {
         router.push(redirectTo);
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Registration error:", error);
       setSubmitError(
-        err instanceof Error ? err.message : "Registration failed"
+        error instanceof Error ? error.message : "Registration failed"
       );
     }
   };
@@ -181,5 +182,13 @@ export default function RegisterForm() {
         </Button>
       </form>
     </Form>
+  );
+}
+
+export default function RegisterForm() {
+  return (
+    <Suspense fallback={<div className="text-white">Loading...</div>}>
+      <RegisterFormContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { loginSchema, type LoginFormData } from "@/lib/schemas/auth";
 
-export default function LoginForm() {
+function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
@@ -47,7 +47,8 @@ export default function LoginForm() {
       } else {
         router.push(redirectTo);
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Login error:", error);
       setSubmitError("Login failed");
     }
   };
@@ -120,5 +121,13 @@ export default function LoginForm() {
         </Button>
       </form>
     </Form>
+  );
+}
+
+export default function LoginForm() {
+  return (
+    <Suspense fallback={<div className="text-white">Loading...</div>}>
+      <LoginFormContent />
+    </Suspense>
   );
 }
