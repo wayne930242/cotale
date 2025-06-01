@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
-import { config } from 'dotenv';
-import { resolve } from 'path';
 
-// Load environment variables from root .env file
-config({ path: resolve(__dirname, '../.env') });
+if (process.env.NODE_ENV === "development") {
+  const { config } = require("dotenv");
+  const { resolve } = require("path");
+  config({ path: resolve(__dirname, "../.env") });
+}
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   webpack: (config, { isServer }) => {
     // Monaco Editor support
     if (!isServer) {
@@ -20,7 +22,7 @@ const nextConfig: NextConfig = {
     // Handle Monaco Editor worker files
     config.module.rules.push({
       test: /\.worker\.js$/,
-      use: { loader: 'worker-loader' },
+      use: { loader: "worker-loader" },
     });
 
     return config;
